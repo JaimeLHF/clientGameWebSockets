@@ -1,0 +1,31 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(240, 240, 240);
+}
+
+.cointainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 64px;
+    gap: 32px;
+}
+
+button {
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    padding: 24px 64px;
+    background-color: rgb(6, 153, 179);
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(0, 123, 143);
+}
