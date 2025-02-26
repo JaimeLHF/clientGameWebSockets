@@ -7,24 +7,54 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Alinha os textos no topo */
+    justify-content: flex-start;
+    /* Alinha os textos no topo */
     overflow: hidden;
     text-align: center;
 }
 
-h1, p {
+h1,
+p {
     color: #ff0;
     text-shadow: 0 0 10px #ff0;
     margin-top: 16px;
 }
 
+@keyframes gradientAnimation {
+    0% {
+        background: linear-gradient(45deg, cyan, magenta);
+        box-shadow: 0 0 20px cyan;
+    }
+
+    25% {
+        background: linear-gradient(45deg, magenta, yellow);
+        box-shadow: 0 0 20px magenta;
+    }
+
+    50% {
+        background: linear-gradient(45deg, yellow, lime);
+        box-shadow: 0 0 20px yellow;
+    }
+
+    75% {
+        background: linear-gradient(45deg, lime, cyan);
+        box-shadow: 0 0 20px lime;
+    }
+
+    100% {
+        background: linear-gradient(45deg, cyan, magenta);
+        box-shadow: 0 0 20px cyan;
+    }
+}
+
 .square {
     position: absolute;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(45deg, cyan, magenta);
+    width: 224px;
+    height: 32px;
     border-radius: 8px;
-    box-shadow: 0 0 20px cyan;
-    transition: transform 0.2s ease-in-out;
-    bottom: 100px; /* Posiciona mais embaixo */
+    transition: transform 0.1s ease-in-out;
+    bottom: 100px;
+
+    /* Aplica a animação */
+    animation: gradientAnimation 3s infinite linear;
 }
