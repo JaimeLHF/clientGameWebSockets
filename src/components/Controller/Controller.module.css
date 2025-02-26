@@ -1,0 +1,68 @@
+/* Controller.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 16px;
+    height: 80vh;
+    background: radial-gradient(circle, #0f0f0f, #1a1a1a);
+    color: #0ff;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px #0ff;
+    border: 3px solid #0ff;
+    box-shadow: 0 0 20px #0ff;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+p {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: #0ff;
+}
+
+.buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    
+}
+
+button {
+    background: linear-gradient(45deg, #0ff, #00aaff);
+    color: black;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.8rem;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-shadow: 0 0 5px #000;
+    box-shadow: 0 0 15px #0ff;
+}
+
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px #0ff;
+}
+
+.directions {
+    margin-top: 30px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 15px;
+    background: rgba(0, 255, 255, 0.2);
+    border: 2px solid #0ff;
+    border-radius: 12px;
+    min-width: 250px;
+    text-align: center;
+    box-shadow: 0 0 15px #0ff;
+}

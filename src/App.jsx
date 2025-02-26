@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import './App.css';
 import { useState, useEffect } from 'react';
 
-const socket = io.connect('http://82.29.59.166:3000'); // Conecta ao servidor ao carregar o componente
+const socket = io.connect('http://localhost:3000'); // Conecta ao servidor ao carregar o componente
 
 const App = () => {
   const [direction, setDirection] = useState('');
