@@ -2,7 +2,7 @@ import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import styles from "./Game.module.css";
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
 const Game = () => {
     const [roomId, setRoomId] = useState("");

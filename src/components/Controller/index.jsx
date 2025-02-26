@@ -2,10 +2,9 @@ import io from "socket.io-client";
 import styles from "./Controller.module.css"
 import { useState, useEffect } from "react";
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
 const Controller = () => {
-    const [direction, setDirection] = useState("");
     const [roomId, setRoomId] = useState("");
 
     useEffect(() => {

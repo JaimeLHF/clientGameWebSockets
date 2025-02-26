@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import styles from "./HomePage.module.css";
 import { useNavigate } from "react-router-dom";
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
 const HomePage = () => {
     const [roomId, setRoomId] = useState("");
