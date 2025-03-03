@@ -14,8 +14,9 @@ const App = () => {
     socket.emit("create-room");
     socket.on("room-created", (id) => {
       setRoomId(id);
-      // window.open(`/controller?roomId=${id}`, "_blank");
-      navigate(`/game?roomId=${id}`);
+      if (id) {
+        navigate(`/game?roomId=${id}`);
+      }
     });
   };
 
