@@ -1,41 +1,29 @@
-import io from 'socket.io-client';
-import './App.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import io from "socket.io-client";
+import styles from './App.module.css';
+import { CiPlay1 } from 'react-icons/ci';
+import { Link, useNavigate } from 'react-router-dom';
 
 const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
 const App = () => {
-  const [direction, setDirection] = useState('');
+  const [roomId, setRoomId] = useState("");
+  const navigate = useNavigate(); // Hook para navegação programática
 
-  const handleRight = () => {
-    console.log('right')
-    socket.emit('move', 'Right ==>');
-  };
-  const handleLeft = () => {
-    console.log('left')
-    socket.emit('move', '<== Left');
-  };
-
-  useEffect(() => {
-    socket.on('direction', (data) => {
-      setDirection(data);
+  const handleCreateRoom = () => {
+    socket.emit("create-room");
+    socket.on("room-created", (id) => {
+      setRoomId(id);
+      // window.open(`/controller?roomId=${id}`, "_blank");
+      navigate(`/game?roomId=${id}`);
     });
-
-    return () => {
-      socket.off('direction');
-    };
-  }), [];
+  };
 
   return (
-    <div className='App'>
-      <h1>Robot Controller</h1>
-      <div className='cointainer'>
-        <button onClick={handleLeft}>Left</button>
-        <button onClick={handleRight}>Right</button>
-      </div>
-      <div>
-        <span>{direction}</span>
-      </div>
+    <div className={styles.app}>
+      <p className={styles.welcome}>Welcome to</p>
+      <h1 className={styles.name_game}>Brick Breaker Game</h1>
+      <Link to={`/game?roomId=${roomId}`}> <button className={styles.btn_play} onClick={handleCreateRoom}><CiPlay1 /></button></Link>
     </div>
   );
 };

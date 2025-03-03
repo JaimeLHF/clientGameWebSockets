@@ -21,7 +21,7 @@ const HomePage = () => {
 
     return (
         <div className={styles.homePage}>
-            <h1 className={styles.title}>Welcome to this Game !!</h1>
+            <h1 className={styles.title}><span>Welcome to</span> BRICK BREAKER !!</h1>
             <p className={styles.description}>
                 Scan the QR Code or copy the link to access from your phone
             </p>

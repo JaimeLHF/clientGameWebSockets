@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: radial-gradient(circle, #000 40%, #1a1a1a 100%);
+    color: #ffcc00;
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+    text-shadow: 3px 3px 8px rgba(255, 204, 0, 0.8);
+}
+
+.welcome {
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: flicker 1.5s infinite alternate;
+    color: #ff007f;
+    text-shadow: 3px 3px 8px rgba(255, 0, 255, 0.7);
+}
+
+.name_game {
+    font-size: 64px;
+    padding: 160px;
+    color: #ffcc00;
+    text-shadow: 3px 3px 8px rgba(255, 0, 255, 0.7);
+}
+
+/* BOTÃO ESTILIZADO */
+.btn_play {
+    background: linear-gradient(180deg, #ffd700 0%, #ffcc00 50%, #cc9900 100%);
+    border: 3px solid #ffcc00;
+    padding: 18px 64px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 0px #aa8800, 0px 10px 20px rgba(255, 204, 0, 0.5);
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+    font-size: 32px;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.btn_play svg {
+    font-size: 36px;
+}
+
+.btn_play:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 0px #aa8800, 0px 15px 30px rgba(255, 204, 0, 0.8);
+}
+
+.btn_play:active {
+    transform: translateY(2px);
+    box-shadow: 0px 3px 0px #aa8800;
+}
+
+/* Animação de piscar */
+@keyframes flicker {
+    0% {
+        opacity: 0.85;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Animação de pulsação do botão */
+@keyframes pulse {
+    0% {
+        box-shadow: 0px 5px 0px #aa8800, 0px 10px 20px rgba(255, 204, 0, 0.5);
+    }
+
+    50% {
+        box-shadow: 0px 8px 0px #aa8800, 0px 15px 30px rgba(255, 204, 0, 0.8);
+    }
+
+    100% {
+        box-shadow: 0px 5px 0px #aa8800, 0px 10px 20px rgba(255, 204, 0, 0.5);
+    }
+}

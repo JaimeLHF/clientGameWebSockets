@@ -1,12 +1,14 @@
 import io from "socket.io-client";
 import styles from "./Controller.module.css";
 import { useState, useEffect, useRef } from "react";
+import { CiPlay1 } from "react-icons/ci";
 
 const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
 const Controller = () => {
     const [roomId, setRoomId] = useState("");
-    const intervalRef = useRef(null); // Referência para armazenar o intervalo
+    const [showPlayButton, setShowPlayButton] = useState(true); // Estado do botão Play
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -18,15 +20,18 @@ const Controller = () => {
         }
     }, []);
 
-    const startMoving = (direction) => {
-        // Evita múltiplos intervalos
-        if (intervalRef.current) return;
+    const handlePlayClick = () => {
+        setShowPlayButton(false); // Esconde o botão
+        socket.emit("controller_opened", { roomId }); // Envia evento para o Game
+    };
 
+    const startMoving = (direction) => {
+        if (intervalRef.current) return;
         socket.emit("move", { roomId, direction });
 
         intervalRef.current = setInterval(() => {
             socket.emit("move", { roomId, direction });
-        }, 35); // Envia a ação a cada 100ms enquanto o botão estiver pressionado
+        }, 35);
     };
 
     const stopMoving = () => {
@@ -38,13 +43,30 @@ const Controller = () => {
 
     return (
         <div className={styles.container}>
+            {showPlayButton && (
+                <button
+                    onClick={handlePlayClick}
+                    className={styles.btn_play}
+                    onMouseDown={() => startMoving("<== Left")}
+                    onMouseUp={stopMoving}
+                    onMouseLeave={stopMoving}
+                    onTouchStart={() => startMoving("<== Left")}
+                    onTouchEnd={stopMoving}
+                    style={{ userSelect: "none" }}
+                >
+                    <CiPlay1 size={48} />
+                </button>
+            )}
+
             <h1>Robot Controller</h1>
             <p>Room ID: {roomId}</p>
             <div className={styles.buttons}>
                 <button
                     onMouseDown={() => startMoving("<== Left")}
                     onMouseUp={stopMoving}
-                    onMouseLeave={stopMoving} // Para garantir que pare ao sair do botão
+                    onMouseLeave={stopMoving}
+                    onTouchStart={() => startMoving("<== Left")}
+                    onTouchEnd={stopMoving}
                     style={{ userSelect: "none" }}
                 >
                     Left
@@ -53,6 +75,8 @@ const Controller = () => {
                     onMouseDown={() => startMoving("Right ==>")}
                     onMouseUp={stopMoving}
                     onMouseLeave={stopMoving}
+                    onTouchStart={() => startMoving("Right ==>")}
+                    onTouchEnd={stopMoving}
                     style={{ userSelect: "none" }}
                 >
                     Right

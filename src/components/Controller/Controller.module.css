@@ -67,3 +67,9 @@ button:hover {
     text-align: center;
     box-shadow: 0 0 15px #0ff;
 }
+
+.btn_play{
+    position: fixed;
+    z-index: 1;
+    padding: 32px 102px;
+}
