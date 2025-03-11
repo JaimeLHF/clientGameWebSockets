@@ -97,3 +97,13 @@ p {
     z-index: 0;
     /* Faz com que o quadrado fique abaixo do modal */
 }
+
+
+.ball {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    transition: transform 0.016s linear;
+    /* Suavidade */
+}

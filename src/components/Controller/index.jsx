@@ -27,10 +27,10 @@ const Controller = () => {
 
     const startMoving = (direction) => {
         if (intervalRef.current) return;
-        socket.emit("move", { roomId, direction });
-
+        socket.emit("move", { direction });
+        console.log("startMoving", direction);
         intervalRef.current = setInterval(() => {
-            socket.emit("move", { roomId, direction });
+            socket.emit("move", { direction });
         }, 35);
     };
 
@@ -47,10 +47,10 @@ const Controller = () => {
                 <button
                     onClick={handlePlayClick}
                     className={styles.btn_play}
-                    onMouseDown={() => startMoving("<== Left")}
+                    onMouseDown={() => startMoving("LEFT")}
                     onMouseUp={stopMoving}
                     onMouseLeave={stopMoving}
-                    onTouchStart={() => startMoving("<== Left")}
+                    onTouchStart={() => startMoving("LEFT")}
                     onTouchEnd={stopMoving}
                     style={{ userSelect: "none" }}
                 >
@@ -62,20 +62,20 @@ const Controller = () => {
             <p>Room ID: {roomId}</p>
             <div className={styles.buttons}>
                 <button
-                    onMouseDown={() => startMoving("<== Left")}
+                    onMouseDown={() => startMoving("LEFT")}
                     onMouseUp={stopMoving}
                     onMouseLeave={stopMoving}
-                    onTouchStart={() => startMoving("<== Left")}
+                    onTouchStart={() => startMoving("LEFT")}
                     onTouchEnd={stopMoving}
                     style={{ userSelect: "none" }}
                 >
                     Left
                 </button>
                 <button
-                    onMouseDown={() => startMoving("Right ==>")}
+                    onMouseDown={() => startMoving("RIGHT")}
                     onMouseUp={stopMoving}
                     onMouseLeave={stopMoving}
-                    onTouchStart={() => startMoving("Right ==>")}
+                    onTouchStart={() => startMoving("RIGHT")}
                     onTouchEnd={stopMoving}
                     style={{ userSelect: "none" }}
                 >

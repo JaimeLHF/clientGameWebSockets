@@ -13,9 +13,9 @@ const App = () => {
   const handleCreateRoom = () => {
     socket.emit("create-room");
     socket.on("room-created", (id) => {
-      setRoomId(id);
       if (id) {
         navigate(`/game?roomId=${id}`);
+        setRoomId(id);
       }
     });
   };
