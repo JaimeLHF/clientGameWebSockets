@@ -6,7 +6,7 @@ import ballImg from "../../assets/images/ball.png";
 import paddleImg from "../../assets/images/paddle.png";
 import life from "../../assets/images/life.png";
 import brick from "../../assets/images/brick.png";
-import Phaser, { Scale } from "phaser";
+import Phaser from "phaser";
 
 const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
@@ -15,8 +15,8 @@ const Game = () => {
     const [modal, setModal] = useState(true);
     const gameRef = useRef(null);
     const ballAttached = useRef(true);
-    const ballRef = useRef(null); // Referência para a bola
-    const paddleRef = useRef(null); // Referência para o paddle
+    const ballRef = useRef(null);
+    const paddleRef = useRef(null);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -27,6 +27,7 @@ const Game = () => {
             socket.emit("join", { roomId: id, role: "game" });
             console.log(`Game entrou na sala ${id}`);
         }
+
 
         socket.on("direction", (data) => {
             setModal(false);
@@ -44,6 +45,7 @@ const Game = () => {
             socket.off("controller_opened");
         };
     }, []);
+
 
     useEffect(() => {
         let lives = 3;
@@ -175,7 +177,7 @@ const Game = () => {
                 // Reiniciar a posição da bola
                 ballRef.current.setPosition(paddleRef.current.x, 520);
                 ballRef.current.setVelocity(0);
-                ballAttached.current = true; // Reanexar a bola para o lançamento
+                ballAttached.current = true;
             }
         }
     }, []);
@@ -183,24 +185,22 @@ const Game = () => {
     function launchBall() {
         if (ballAttached.current && ballRef.current) {
             ballAttached.current = false;
-            const randomX = Phaser.Math.Between(-200, 200); // Define uma direção aleatória no eixo X
-            ballRef.current.setVelocity(randomX, -300); // Define a velocidade inicial da bola
+            const randomX = Phaser.Math.Between(-200, 200);
+            ballRef.current.setVelocity(randomX, -300);
         }
     }
 
     const moveSquare = (direction) => {
         setModal(false);
         console.log(direction);
-        const step = 10; // Distância menor para movimento controlado
+        const step = 10;
 
         if (paddleRef.current) {
             switch (direction) {
                 case "RIGHT":
-                    // Move o paddle para a direita
                     paddleRef.current.x += step;
                     break;
                 case "LEFT":
-                    // Move o paddle para a esquerda
                     paddleRef.current.x -= step;
                     break;
                 default:
@@ -211,16 +211,16 @@ const Game = () => {
 
     return (
         <>
-            <div className={styles.gameWrapper}>
-                {/* Modal */}
-                {modal && (
-                    <div className={styles.overlay_modal}>
-                        <h1>Por favor, escaneie o QR Code abaixo ou copie o link e acesse pelo seu smartphone</h1>
-                        <QRCodeSVG value={`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`} />
-                        <p>{`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`}</p>
-                    </div>
-                )}
-            </div>
+
+            {/* Modal */}
+            {modal && (
+                <div className={styles.overlay_modal}>
+                    <h1>Por favor, escaneie o QR Code abaixo ou copie o link e acesse pelo seu smartphone</h1>
+                    <QRCodeSVG value={`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`} />
+                    <p>{`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`}</p>
+                </div>
+            )}
+
         </>
     );
 };

@@ -1,17 +1,71 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+body,
+html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Remove o scroll */
+}
+
+canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+
 .app {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: radial-gradient(circle, #000 40%, #1a1a1a 100%);
     color: #ffcc00;
     font-family: 'Press Start 2P', cursive;
     text-align: center;
     text-shadow: 3px 3px 8px rgba(255, 204, 0, 0.8);
+    background-image: url("./assets/images/background.webp");
+    background-color: rgba(0, 0, 0, 0.95);
+    background-blend-mode: overlay;
+    /* Blends the background image with the color */
+    background-size: cover;
 }
+
+.phaser-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.instructions {
+    font-size: 48px;
+    padding: 32px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: end;
+    cursor: pointer;
+}
+
+.instructions:hover {
+    color: #ff007f;
+    scale: 1.1;
+}
+
+.howtoplay {
+    margin-top: 64px;
+}
+
+.howtoplay:hover {
+    scale: 1.1;
+    cursor: pointer;
+}
+
 
 .welcome {
     font-size: 18px;
@@ -27,6 +81,7 @@
     padding: 160px;
     color: #ffcc00;
     text-shadow: 3px 3px 8px rgba(255, 0, 255, 0.7);
+
 }
 
 /* BOTÃO ESTILIZADO */
@@ -44,6 +99,7 @@
     align-items: center;
     justify-content: center;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    z-index: 9999;
 }
 
 .btn_play svg {
