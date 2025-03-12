@@ -69,7 +69,7 @@ const Game = () => {
                 this.load.image("paddle", paddleImg);
                 this.load.image("life", life);
                 this.load.image("brick", brick);
-                this.load.audio("gameStarted", gameStartSound);
+                this.load.audio("gameStart", gameStartSound);
                 this.load.audio("brickHit", brickHitSound);
                 this.load.audio("ballHit", ballHitSound);
                 this.load.audio("victory", victorySound);
@@ -212,7 +212,7 @@ const Game = () => {
             ballAttached.current = false;
             const randomX = Phaser.Math.Between(-200, 200);
             ballRef.current.setVelocity(randomX, -300);   
-            this.sound.play('gameStarted');         
+            this.sound.play('gameStart');         
         }
     }
 
