@@ -36,12 +36,12 @@ const Game = () => {
         }
 
         socket.on("direction", (data) => {
-            launchBall.call(this);
+            launchBall();
             moveSquare(data.direction);
         });
 
         socket.on("controller_opened", () => {
-            launchBall.call(this);
+            launchBall();
         });
 
         socket.on("room_id", (data) => {
@@ -78,7 +78,7 @@ const Game = () => {
             };
 
             const create = function () {
-
+                this.sound.play('gameStart');
                 this.add.graphics()
                     .lineStyle(4, 0xff0000, 1)
                     .strokeRect(0, 0, this.scale.width, this.scale.height)
@@ -97,6 +97,7 @@ const Game = () => {
                 // Criar o grupo de blocos (ladrilhos)
                 const colors = [0xff0000, 0xff7105, 0xffff00, 0x00ff00, 0x00c4fa, 0xeb02c4];
                 const bricks = this.physics.add.staticGroup();
+                let totalBricks = 0;
 
                 for (let row = 0; row < colors.length; row++) {
                     for (let col = 0; col < 8; col++) {
@@ -104,18 +105,26 @@ const Game = () => {
                         brick.setTint(colors[row]);
                         brick.setOrigin(0.5, 0.5); // Centraliza o bloco
                         brick.refreshBody(); // Atualiza o corpo para refletir o novo tamanho
+                        totalBricks++;
                     }
                 }
-
-                // Colisão da bola com o paddle
-                this.physics.add.collider(ballRef.current, paddleRef.current, () => {
-                    const randomDirection = Phaser.Math.Between(-50, 50);
-                    ballRef.current.setVelocityX(ballRef.current.body.velocity.x + randomDirection);
-                });
 
                 // Colisão da bola com os blocos
                 this.physics.add.collider(ballRef.current, bricks, (ball, brick) => {
                     brick.destroy(); // Destruir o bloco ao colidir
+                    this.sound.play('ballHit');
+
+                    totalBricks--;
+
+                    if (totalBricks === 0) {
+
+                        this.add.text(300, 300, "Victory !!", {
+                            fontSize: "40px",
+                            fill: "#00ff00",
+                        });
+
+                        this.sound.play('victory');
+                    }
                 });
 
                 // Texto das vidas
@@ -131,9 +140,9 @@ const Game = () => {
             };
 
 
+
             const update = function () {
 
-                // Verificar posição do paddle
                 if (paddleRef.current) {
                     const paddleWidth = paddleRef.current.width;
                     if (paddleRef.current.x < 0) {
@@ -191,10 +200,11 @@ const Game = () => {
 
             if (lives <= 0) {
                 console.log("Game Over");
-                this.add.text(350, 300, "Game Over", {
+                this.add.text(300, 300, "Game Over", {
                     fontSize: "40px",
                     fill: "#ff0000"
                 });
+                this.sound.play('gameOver');
                 ballRef.current.setVelocity(0);
                 ballRef.current.setPosition(400, 520);
                 paddleRef.current.setPosition(400, 550);
@@ -205,14 +215,14 @@ const Game = () => {
                 ballAttached.current = true;
             }
         }
+
     }, []);
 
     function launchBall() {
         if (ballAttached.current && ballRef.current) {
             ballAttached.current = false;
             const randomX = Phaser.Math.Between(-200, 200);
-            ballRef.current.setVelocity(randomX, -300);   
-            this.sound.play('gameStart');         
+            ballRef.current.setVelocity(randomX, -300);
         }
     }
 
