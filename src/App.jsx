@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import io from "socket.io-client";
 import styles from './App.module.css';
 import { CiPlay1 } from 'react-icons/ci';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ballImg from './assets/images/ball.png';
 import Phaser from 'phaser';
 import ModalHowToPlay from './components/ModalHowToPlay';
@@ -12,7 +12,7 @@ import { BiSolidGame } from 'react-icons/bi';
 const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
 const App = () => {
-  const [roomId, setRoomId] = useState("");
+
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenCredits, setIsOpenCredits] = useState(false);
@@ -23,7 +23,7 @@ const App = () => {
     socket.on("room-created", (id) => {
       if (id) {
         navigate(`/game?roomId=${id}`);
-        setRoomId(id);
+        console.log(id)
       }
     });
   };
@@ -112,9 +112,7 @@ const App = () => {
       </div>
       <p className={styles.welcome}>Welcome to</p>
       <h1 className={styles.name_game}>Brick Breaker Game</h1>
-      <Link to={`/game?roomId=${roomId}`}>
-        <button className={styles.btn_play} onClick={handleCreateRoom}><CiPlay1 /></button>
-      </Link>
+      <button className={styles.btn_play} onClick={handleCreateRoom}><CiPlay1 /></button>
       <div className={styles["phaser-container"]} ref={gameRef}></div>
       <p className={styles.howtoplay} onClick={() => setIsOpen(true)}>How to play?</p>
       <ModalHowToPlay isOpen={isOpen} onClose={() => setIsOpen(false)} />

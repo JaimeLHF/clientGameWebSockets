@@ -13,6 +13,7 @@ const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 const Game = () => {
     const [roomId, setRoomId] = useState("");
     const [modal, setModal] = useState(true);
+    const [loading, setLoading] = useState(true);
     const gameRef = useRef(null);
     const ballAttached = useRef(true);
     const ballRef = useRef(null);
@@ -21,30 +22,35 @@ const Game = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const id = params.get("roomId");
-        setRoomId(id);
-
+    
         if (id) {
+            setRoomId(id);
             socket.emit("join", { roomId: id, role: "game" });
             console.log(`Game entrou na sala ${id}`);
         }
-
-
+    
         socket.on("direction", (data) => {
-            setModal(false);
             launchBall();
             moveSquare(data.direction);
         });
-
+    
         socket.on("controller_opened", () => {
             launchBall();
-            setModal(false);
         });
-
+    
+        socket.on("room_id", (data) => {
+            setRoomId(data.roomId);
+            setModal(false);
+            console.log(`Room ID recebido: ${data.roomId}`);
+        });
+    
         return () => {
             socket.off("direction");
             socket.off("controller_opened");
+            socket.off("room_id");
         };
     }, []);
+    
 
 
     useEffect(() => {

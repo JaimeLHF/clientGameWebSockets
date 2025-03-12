@@ -3,11 +3,13 @@ import HomePage from './components/HomePage.jsx';
 import Game from "./components/Game/index.jsx";
 import Controller from "./components/Controller/index.jsx";
 import App from "./App.jsx";
+import Loading from "./pages/Loading/index.jsx";
 
 const AppRoutes = () => (
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<App />} />
+            <Route path="/loading" element={<Loading />} />
             <Route path="/brickbreaker" element={<HomePage />} />
             <Route path="/game" element={<Game />} />
             <Route path="/controller" element={<Controller />} />
