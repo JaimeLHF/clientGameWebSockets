@@ -6,6 +6,13 @@ import ballImg from "../../assets/images/ball.png";
 import paddleImg from "../../assets/images/paddle.png";
 import life from "../../assets/images/life.png";
 import brick from "../../assets/images/brick.png";
+import brickHitSound from "../../assets/sounds/break.mp3";
+import ballHitSound from "../../assets/sounds/ballhit.mp3";
+import victorySound from "../../assets/sounds/win.mp3";
+import gameOverSound from "../../assets/sounds/gameOver.mp3";
+import lostLifeSound from "../../assets/sounds/lostLife.mp3";
+import gameStartSound from "../../assets/sounds/gameStart.mp3";
+
 import Phaser from "phaser";
 
 const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
@@ -13,7 +20,6 @@ const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 const Game = () => {
     const [roomId, setRoomId] = useState("");
     const [modal, setModal] = useState(true);
-    const [loading, setLoading] = useState(true);
     const gameRef = useRef(null);
     const ballAttached = useRef(true);
     const ballRef = useRef(null);
@@ -22,35 +28,35 @@ const Game = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const id = params.get("roomId");
-    
+
         if (id) {
             setRoomId(id);
             socket.emit("join", { roomId: id, role: "game" });
             console.log(`Game entrou na sala ${id}`);
         }
-    
+
         socket.on("direction", (data) => {
-            launchBall();
+            launchBall.call(this);
             moveSquare(data.direction);
         });
-    
+
         socket.on("controller_opened", () => {
-            launchBall();
+            launchBall.call(this);
         });
-    
+
         socket.on("room_id", (data) => {
             setRoomId(data.roomId);
             setModal(false);
             console.log(`Room ID recebido: ${data.roomId}`);
         });
-    
+
         return () => {
             socket.off("direction");
             socket.off("controller_opened");
             socket.off("room_id");
         };
     }, []);
-    
+
 
 
     useEffect(() => {
@@ -63,8 +69,21 @@ const Game = () => {
                 this.load.image("paddle", paddleImg);
                 this.load.image("life", life);
                 this.load.image("brick", brick);
+                this.load.audio("gameStarted", gameStartSound);
+                this.load.audio("brickHit", brickHitSound);
+                this.load.audio("ballHit", ballHitSound);
+                this.load.audio("victory", victorySound);
+                this.load.audio("gameOver", gameOverSound);
+                this.load.audio("lostLife", lostLifeSound);
             };
+
             const create = function () {
+
+                this.add.graphics()
+                    .lineStyle(4, 0xff0000, 1)
+                    .strokeRect(0, 0, this.scale.width, this.scale.height)
+                    .setAlpha(0.5);
+
                 // Bola
                 ballRef.current = this.physics.add.sprite(400, 520, "ball");
                 ballRef.current.setCollideWorldBounds(true);
@@ -126,7 +145,7 @@ const Game = () => {
 
                 // Verificar se a bola saiu da tela
                 if (ballRef.current && ballRef.current.y >= 590) {
-                    loseLife();
+                    loseLife.call(this);
                 }
             };
 
@@ -134,6 +153,7 @@ const Game = () => {
                 type: Phaser.AUTO,
                 width: 800,
                 height: 600,
+                transparent: true,
                 scale: {
                     mode: Phaser.Scale.FIT,
                     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -160,14 +180,13 @@ const Game = () => {
             };
         }
 
-        // Função para perder uma vida
         function loseLife() {
             lives -= 1;
 
-            // Remover uma das vidas visuais
             const life = livesText.getChildren()[lives];
             if (life) {
                 life.destroy();
+                this.sound.play('lostLife');
             }
 
             if (lives <= 0) {
@@ -176,11 +195,11 @@ const Game = () => {
                     fontSize: "40px",
                     fill: "#ff0000"
                 });
-                ballRef.current.setVelocity(0); // Parar a bola
-                ballRef.current.setPosition(400, 520); // Resetar a posição da bola
-                paddleRef.current.setPosition(400, 550); // Resetar a posição do paddle
+                ballRef.current.setVelocity(0);
+                ballRef.current.setPosition(400, 520);
+                paddleRef.current.setPosition(400, 550);
             } else {
-                // Reiniciar a posição da bola
+
                 ballRef.current.setPosition(paddleRef.current.x, 520);
                 ballRef.current.setVelocity(0);
                 ballAttached.current = true;
@@ -192,7 +211,8 @@ const Game = () => {
         if (ballAttached.current && ballRef.current) {
             ballAttached.current = false;
             const randomX = Phaser.Math.Between(-200, 200);
-            ballRef.current.setVelocity(randomX, -300);
+            ballRef.current.setVelocity(randomX, -300);   
+            this.sound.play('gameStarted');         
         }
     }
 
@@ -223,9 +243,18 @@ const Game = () => {
                 <div className={styles.overlay_modal}>
                     <h1>Por favor, escaneie o QR Code abaixo ou copie o link e acesse pelo seu smartphone</h1>
                     <QRCodeSVG value={`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`} />
-                    <p>{`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`}</p>
+                    <div className={styles.linkContainer}>
+                        <p>{`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`}</p>
+                        <button
+                            className={styles.copyButton}
+                            onClick={() => navigator.clipboard.writeText(`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`)}
+                        >
+                            📋
+                        </button>
+                    </div>
                 </div>
             )}
+
 
         </>
     );

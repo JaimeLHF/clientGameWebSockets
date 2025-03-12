@@ -21,8 +21,9 @@ const Controller = () => {
     }, []);
 
     const handlePlayClick = () => {
-        setShowPlayButton(false); // Esconde o botão
+        setShowPlayButton(false); // Esconde o modal ao clicar
         socket.emit("controller_opened", { roomId }); // Envia evento para o Game
+        socket.emit("move", 'UP');
     };
 
     const startMoving = (direction) => {
@@ -44,21 +45,14 @@ const Controller = () => {
     return (
         <div className={styles.container}>
             {showPlayButton && (
-                <button
-                    onClick={handlePlayClick}
-                    className={styles.btn_play}
-                    onMouseDown={() => startMoving("LEFT")}
-                    onMouseUp={stopMoving}
-                    onMouseLeave={stopMoving}
-                    onTouchStart={() => startMoving("LEFT")}
-                    onTouchEnd={stopMoving}
-                    style={{ userSelect: "none" }}
-                >
-                    <CiPlay1 size={48} />
-                </button>
+                <div className={styles.overlay}>
+                    <div className={styles.modal}>
+                        <button className={styles.btn_play} onClick={handlePlayClick}><CiPlay1 /></button>
+                    </div>
+                </div>
             )}
 
-            <h1>Robot Controller</h1>
+            <h1>Controller</h1>
             <p>Room ID: {roomId}</p>
             <div className={styles.buttons}>
                 <button
