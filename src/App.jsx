@@ -5,13 +5,17 @@ import { CiPlay1 } from 'react-icons/ci';
 import { Link, useNavigate } from 'react-router-dom';
 import ballImg from './assets/images/ball.png';
 import Phaser from 'phaser';
-import { FaQuestionCircle } from 'react-icons/fa';
+import ModalHowToPlay from './components/ModalHowToPlay';
+import ModalCredits from './components/ModalCredits';
+import { BiSolidGame } from 'react-icons/bi';
 
 const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
 const App = () => {
   const [roomId, setRoomId] = useState("");
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenCredits, setIsOpenCredits] = useState(false);
   const gameRef = useRef(null);
 
   const handleCreateRoom = () => {
@@ -103,8 +107,8 @@ const App = () => {
 
   return (
     <div className={styles.app}>
-      <div className={styles.instructions}>
-        <FaQuestionCircle />
+      <div className={`${styles.instructions} ${styles.rotate}`} onClick={() => setIsOpenCredits(true)}>
+        <BiSolidGame />
       </div>
       <p className={styles.welcome}>Welcome to</p>
       <h1 className={styles.name_game}>Brick Breaker Game</h1>
@@ -112,7 +116,9 @@ const App = () => {
         <button className={styles.btn_play} onClick={handleCreateRoom}><CiPlay1 /></button>
       </Link>
       <div className={styles["phaser-container"]} ref={gameRef}></div>
-      <p className={styles.howtoplay}>How to play?</p>
+      <p className={styles.howtoplay} onClick={() => setIsOpen(true)}>How to play?</p>
+      <ModalHowToPlay isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <ModalCredits isOpen={isOpenCredits} onClose={() => setIsOpenCredits(false)} />
     </div>
   );
 };

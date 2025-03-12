@@ -50,11 +50,11 @@ canvas {
     left: 0;
     text-align: end;
     cursor: pointer;
+    animation: just_pulse 1.5s infinite alternate, turn 5s infinite alternate;
 }
 
 .instructions:hover {
     color: #ff007f;
-    scale: 1.1;
 }
 
 .howtoplay {
@@ -139,5 +139,27 @@ canvas {
 
     100% {
         box-shadow: 0px 5px 0px #aa8800, 0px 10px 20px rgba(255, 204, 0, 0.5);
+    }
+}
+
+/* Animação de pulsação do botão */
+@keyframes just_pulse {
+    0% {
+        scale: 1;
+    }
+
+    100% {
+        scale: 1.2;
+    }
+}
+
+/* Animação de pulsação do botão */
+@keyframes turn {
+    0% {
+        rotate: 0deg;
+    }
+
+    100% {
+        rotate: 360deg;
     }
 }
