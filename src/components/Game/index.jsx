@@ -14,10 +14,12 @@ import lostLifeSound from "../../assets/sounds/lostLife.mp3";
 import gameStartSound from "../../assets/sounds/gamestart.mp3";
 
 import Phaser from "phaser";
+import { message } from "antd";
 
 const socket = io.connect(import.meta.env.VITE_API_BASE_URL);
 
 const Game = () => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [roomId, setRoomId] = useState("");
     const [modal, setModal] = useState(true);
     const gameRef = useRef(null);
@@ -76,7 +78,6 @@ const Game = () => {
                 this.load.audio("gameOver", gameOverSound);
                 this.load.audio("lostLife", lostLifeSound);
             };
-
             const create = function () {
                 this.sound.play('gameStart');
                 this.add.graphics()
@@ -93,6 +94,11 @@ const Game = () => {
                 paddleRef.current = this.physics.add.sprite(400, 550, "paddle");
                 paddleRef.current.setCollideWorldBounds(true);
                 paddleRef.current.setImmovable(true);
+
+                // Colisão da bola com o paddle
+                this.physics.add.collider(ballRef.current, paddleRef.current, () => {
+                    this.sound.play("ballHit");
+                });
 
                 // Criar o grupo de blocos (ladrilhos)
                 const colors = [0xff0000, 0xff7105, 0xffff00, 0x00ff00, 0x00c4fa, 0xeb02c4];
@@ -112,17 +118,14 @@ const Game = () => {
                 // Colisão da bola com os blocos
                 this.physics.add.collider(ballRef.current, bricks, (ball, brick) => {
                     brick.destroy(); // Destruir o bloco ao colidir
-                    this.sound.play('ballHit');
-
+                    this.sound.play('brickHit');
                     totalBricks--;
 
                     if (totalBricks === 0) {
-
                         this.add.text(300, 300, "Victory !!", {
                             fontSize: "40px",
                             fill: "#00ff00",
                         });
-
                         this.sound.play('victory');
                     }
                 });
@@ -138,8 +141,6 @@ const Game = () => {
                     child.setScale(0.08);
                 });
             };
-
-
 
             const update = function () {
 
@@ -218,11 +219,11 @@ const Game = () => {
 
     }, []);
 
-    function launchBall() {
+    function launchBall(speed = 300) {
         if (ballAttached.current && ballRef.current) {
             ballAttached.current = false;
             const randomX = Phaser.Math.Between(-200, 200);
-            ballRef.current.setVelocity(randomX, -300);
+            ballRef.current.setVelocity(randomX, -speed);
         }
     }
 
@@ -245,19 +246,29 @@ const Game = () => {
         }
     };
 
+    const copy_text = () => {
+        navigator.clipboard.writeText(`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`)
+        messageApi.open({
+            type: 'success',
+            content: 'Copiado para a área de transferência!',
+ 
+        });
+    }
+
     return (
         <>
 
             {/* Modal */}
+            {contextHolder}
             {modal && (
                 <div className={styles.overlay_modal}>
                     <h1>Por favor, escaneie o QR Code abaixo ou copie o link e acesse pelo seu smartphone</h1>
                     <QRCodeSVG value={`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`} />
                     <div className={styles.linkContainer}>
-                        <p>{`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`}</p>
+                        <p style={{ userSelect: 'all' }}>{`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`}</p>
                         <button
                             className={styles.copyButton}
-                            onClick={() => navigator.clipboard.writeText(`${import.meta.env.VITE_CLIENT_BASE_URL}/controller?roomId=${roomId}`)}
+                            onClick={copy_text}
                         >
                             📋
                         </button>
