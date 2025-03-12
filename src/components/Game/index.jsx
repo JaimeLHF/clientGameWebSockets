@@ -11,7 +11,7 @@ import ballHitSound from "../../assets/sounds/ballhit.mp3";
 import victorySound from "../../assets/sounds/win.mp3";
 import gameOverSound from "../../assets/sounds/gameOver.mp3";
 import lostLifeSound from "../../assets/sounds/lostLife.mp3";
-import gameStartSound from "../../assets/sounds/gameStart.mp3";
+import gameStartSound from "../../assets/sounds/gamestart.mp3";
 
 import Phaser from "phaser";
 
